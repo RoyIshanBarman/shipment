@@ -1,0 +1,76 @@
+Shop_ID,Review ID,Review Text,Sentiment
+Shop A,1,The shop has a great selection of products and friendly staff.,Positive
+Shop A,2,I had a terrible experience. The service was very slow.,Negative
+Shop A,3,"The products are okay, but the prices are a bit high.",Neutral
+Shop A,4,Absolutely love this place! Highly recommend.,Positive
+Shop A,5,Not satisfied with the customer service.,Negative
+Shop A,6,Excellent quality and reasonable prices.,Positive
+Shop A,7,The staff was rude and unhelpful.,Negative
+Shop A,8,Very clean and well-maintained store.,Positive
+Shop A,9,Long wait times at the checkout.,Negative
+Shop A,10,Friendly and knowledgeable staff.,Positive
+Shop A,11,"Great shopping experience, will visit again.",Positive
+Shop A,12,The store was out of stock on several items.,Negative
+Shop A,13,Helpful staff and a wide variety of products.,Positive
+Shop A,14,The service was very poor.,Negative
+Shop A,15,I found everything I needed quickly and easily.,Positive
+Shop A,16,Good prices and great service.,Positive
+Shop A,17,The store was not clean and well-organized.,Negative
+Shop A,18,The store layout is very intuitive and easy to navigate.,Positive
+Shop A,19,Not happy with the quality of service.,Negative
+Shop A,20,Love the atmosphere and the friendly staff.,Positive
+Shop A,21,"Terrible experience, will not be returning.",Negative
+Shop A,22,Always a pleasure to shop here.,Positive
+Shop A,23,The staff is very accommodating and helpful.,Positive
+Shop A,24,An okay experience but nothing special.,Neutral
+Shop A,25,Great place to find quality products.,Positive
+Shop B,1,Excellent service and friendly staff.,Positive
+Shop B,2,I had to wait a long time to get assistance.,Negative
+Shop B,3,"The products are okay, but the prices are a bit high.",Neutral
+Shop B,4,Had a very frustrating experience.,Negative
+Shop B,5,Great selection of products at good prices.,Positive
+Shop B,6,The service was unacceptable.,Negative
+Shop B,7,Always a positive experience shopping here.,Positive
+Shop B,8,Very poor customer service.,Negative
+Shop B,9,The staff is very knowledgeable and helpful.,Positive
+Shop B,10,Not a good place to shop.,Negative
+Shop B,11,Highly recommend this store to others.,Positive
+Shop B,12,The staff was not very helpful.,Positive
+Shop B,13,Highly recommend this store for all your needs.,Positive
+Shop B,14,Great quality and variety of products.,Negative
+Shop B,15,Not a good selection of products.,Positive
+Shop B,16,"Great shopping experience, will visit again.",Positive
+Shop B,17,I always find what I need here.,Positive
+Shop B,18,An average store with decent products.,Neutral
+Shop B,19,Very dissatisfied with the service.,Negative
+Shop B,20,Will not be coming back here.,Negative
+Shop B,21,The best shopping experience I've had.,Positive
+Shop B,22,Poor selection of products.,Negative
+Shop B,23,The staff was not interested in helping customers.,Negative
+Shop B,24,Some products are good but the service could improve.,Neutral
+Shop B,25,Very disappointing shopping experience.,Negative
+Shop C,1,"The products are okay, but the prices are a bit high.",Neutral
+Shop C,2,A decent variety of items but not very organized.,Neutral
+Shop C,3,Good shopping experience overall.,Positive
+Shop C,4,Found some great deals here.,Positive
+Shop C,5,The staff is always friendly and helpful.,Positive
+Shop C,6,An okay experience but nothing special.,Neutral
+Shop C,7,"The store was average, not very impressive.",Neutral
+Shop C,8,Very clean and well-maintained store.,Positive
+Shop C,9,The prices are reasonable but the service could be better.,Neutral
+Shop C,10,A mixed experience with some positives and negatives.,Neutral
+Shop C,11,An average store with decent products.,Neutral
+Shop C,12,Some products are good but the service could improve.,Neutral
+Shop C,13,Not bad but not great either.,Neutral
+Shop C,14,An okay shopping experience.,Neutral
+Shop C,15,Could be better with a few improvements.,Neutral
+Shop C,16,Great selection of products at good prices.,Positive
+Shop C,17,Average experience with some good deals.,Neutral
+Shop C,18,Not bad but could use some improvements.,Neutral
+Shop C,19,A decent shopping experience.,Neutral
+Shop C,20,The prices are okay but the service could be better.,Neutral
+Shop C,21,The staff is very knowledgeable and helpful.,Positive
+Shop C,22,Some products are good but the service could improve.,Neutral
+Shop C,23,Not a bad experience but not great either.,Neutral
+Shop C,24,An okay shopping experience overall.,Neutral
+Shop C,25,Could be better with a few improvements.,Neutral

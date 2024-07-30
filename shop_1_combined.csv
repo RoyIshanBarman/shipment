@@ -1,0 +1,141 @@
+Date,Product Name,Amount Sold,Visible Stock,Inventory,Category
+05/08/2024,Sofa,5.0,25.0,10.0,Furniture
+05/08/2024,Television,3.0,15.0,5.0,Electronics
+05/08/2024,Bed,4.0,15.0,8.0,Furniture
+05/08/2024,Toaster,2.0,18.0,6.0,Appliances
+05/08/2024,Coffee Maker,4.0,22.0,4.0,Appliances
+05/08/2024,T-Shirt,10.0,50.0,20.0,Clothing
+05/08/2024,Laptop,3.0,20.0,5.0,Electronics
+05/08/2024,Dining Table,2.0,12.0,4.0,Furniture
+05/08/2024,Refrigerator,1.0,8.0,3.0,Appliances
+05/08/2024,Chair,6.0,30.0,10.0,Furniture
+05/08/2024,Blender,4.0,14.0,6.0,Appliances
+05/08/2024,Jeans,8.0,40.0,15.0,Clothing
+05/08/2024,Smartphone,5.0,18.0,4.0,Electronics
+05/08/2024,Nightstand,3.0,10.0,3.0,Furniture
+05/08/2024,Microwave,2.0,12.0,5.0,Appliances
+05/08/2024,Shirt,12.0,60.0,25.0,Clothing
+05/08/2024,Tablet,2.0,10.0,2.0,Electronics
+05/08/2024,Desk Lamp,3.0,15.0,5.0,Home
+05/08/2024,Vacuum Cleaner,1.0,10.0,3.0,Home
+05/08/2024,Couch,4.0,20.0,7.0,Furniture
+05/09/2024,Sofa,6.0,20.0,10.0,Furniture
+05/09/2024,Television,4.0,12.0,3.0,Electronics
+05/09/2024,Bed,5.0,11.0,6.0,Furniture
+05/09/2024,Toaster,3.0,15.0,5.0,Appliances
+05/09/2024,Coffee Maker,5.0,17.0,3.0,Appliances
+05/09/2024,T-Shirt,8.0,42.0,18.0,Clothing
+05/09/2024,Laptop,4.0,17.0,4.0,Electronics
+05/09/2024,Dining Table,3.0,9.0,1.0,Furniture
+05/09/2024,Refrigerator,1.0,7.0,2.0,Appliances
+05/09/2024,Chair,5.0,25.0,9.0,Furniture
+05/09/2024,Blender,3.0,11.0,3.0,Appliances
+05/09/2024,Jeans,6.0,34.0,12.0,Clothing
+05/09/2024,Smartphone,4.0,14.0,3.0,Electronics
+05/09/2024,Nightstand,2.0,8.0,2.0,Furniture
+05/09/2024,Microwave,1.0,10.0,4.0,Appliances
+05/09/2024,Shirt,10.0,50.0,20.0,Clothing
+05/09/2024,Tablet,3.0,8.0,1.0,Electronics
+05/09/2024,Desk Lamp,2.0,12.0,3.0,Home
+05/09/2024,Vacuum Cleaner,1.0,9.0,3.0,Home
+05/09/2024,Couch,3.0,17.0,4.0,Furniture
+05/10/2024,Sofa,5.0,15.0,10.0,Furniture
+05/10/2024,Television,3.0,9.0,2.0,Electronics
+05/10/2024,Bed,4.0,8.0,5.0,Furniture
+05/10/2024,Toaster,2.0,13.0,4.0,Appliances
+05/10/2024,Coffee Maker,4.0,14.0,2.0,Appliances
+05/10/2024,T-Shirt,6.0,36.0,16.0,Clothing
+05/10/2024,Laptop,5.0,12.0,3.0,Electronics
+05/10/2024,Dining Table,3.0,7.0,1.0,Furniture
+05/10/2024,Refrigerator,1.0,6.0,1.0,Appliances
+05/10/2024,Chair,4.0,20.0,8.0,Furniture
+05/10/2024,Blender,2.0,9.0,2.0,Appliances
+05/10/2024,Jeans,5.0,28.0,10.0,Clothing
+05/10/2024,Smartphone,3.0,10.0,2.0,Electronics
+05/10/2024,Nightstand,1.0,7.0,1.0,Furniture
+05/10/2024,Microwave,1.0,9.0,3.0,Appliances
+05/10/2024,Shirt,8.0,40.0,18.0,Clothing
+05/10/2024,Tablet,2.0,6.0,0.0,Electronics
+05/10/2024,Desk Lamp,2.0,10.0,2.0,Home
+05/10/2024,Vacuum Cleaner,1.0,8.0,2.0,Home
+05/10/2024,Couch,2.0,15.0,5.0,Furniture
+05/11/2024,Sofa,6.0,10.0,10.0,Furniture
+05/11/2024,Television,5.0,4.0,1.0,Electronics
+05/11/2024,Bed,6.0,2.0,5.0,Furniture
+05/11/2024,Toaster,4.0,11.0,3.0,Appliances
+05/11/2024,Coffee Maker,6.0,11.0,1.0,Appliances
+05/11/2024,T-Shirt,9.0,27.0,14.0,Clothing
+05/11/2024,Laptop,6.0,7.0,2.0,Electronics
+05/11/2024,Dining Table,4.0,3.0,0.0,Furniture
+05/11/2024,Refrigerator,1.0,5.0,0.0,Appliances
+05/11/2024,Chair,3.0,17.0,6.0,Furniture
+05/11/2024,Blender,3.0,6.0,1.0,Appliances
+05/11/2024,Jeans,4.0,24.0,8.0,Clothing
+05/11/2024,Smartphone,2.0,8.0,1.0,Electronics
+05/11/2024,Nightstand,2.0,5.0,0.0,Furniture
+05/11/2024,Microwave,1.0,8.0,2.0,Appliances
+05/11/2024,Shirt,7.0,35.0,16.0,Clothing
+05/11/2024,Tablet,3.0,3.0,0.0,Electronics
+05/11/2024,Desk Lamp,1.0,9.0,1.0,Home
+05/11/2024,Vacuum Cleaner,1.0,7.0,1.0,Home
+05/11/2024,Couch,3.0,12.0,4.0,Furniture
+05/12/2024,Sofa,6.0,10.0,10.0,Furniture
+05/12/2024,Television,4.0,3.0,1.0,Electronics
+05/12/2024,Bed,5.0,1.0,4.0,Furniture
+05/12/2024,Toaster,3.0,8.0,2.0,Appliances
+05/12/2024,Coffee Maker,5.0,8.0,0.0,Appliances
+05/12/2024,T-Shirt,7.0,20.0,13.0,Clothing
+05/12/2024,Laptop,7.0,0.0,0.0,Electronics
+05/12/2024,Dining Table,2.0,1.0,0.0,Furniture
+05/12/2024,Refrigerator,1.0,4.0,0.0,Appliances
+05/12/2024,Chair,5.0,12.0,3.0,Furniture
+05/12/2024,Blender,2.0,4.0,0.0,Appliances
+05/12/2024,Jeans,3.0,21.0,7.0,Clothing
+05/12/2024,Smartphone,1.0,7.0,0.0,Electronics
+05/12/2024,Nightstand,2.0,3.0,0.0,Furniture
+05/12/2024,Microwave,1.0,7.0,1.0,Appliances
+05/12/2024,Shirt,6.0,29.0,12.0,Clothing
+05/12/2024,Tablet,2.0,1.0,0.0,Electronics
+05/12/2024,Desk Lamp,1.0,8.0,1.0,Home
+05/12/2024,Vacuum Cleaner,1.0,6.0,1.0,Home
+05/12/2024,Couch,2.0,10.0,3.0,Furniture
+05/13/2024,Sofa,4.0,6.0,10.0,Furniture
+05/13/2024,Television,3.0,2.0,2.0,Electronics
+05/13/2024,Bed,2.0,1.0,5.0,Furniture
+05/13/2024,Toaster,2.0,8.0,4.0,Appliances
+05/13/2024,Coffee Maker,3.0,7.0,2.0,Appliances
+05/13/2024,T-Shirt,4.0,20.0,14.0,Clothing
+05/13/2024,Laptop,2.0,2.0,3.0,Electronics
+05/13/2024,Dining Table,2.0,8.0,4.0,Appliances
+05/13/2024,Refrigerator,1.0,3.0,1.0,Furniture
+05/13/2024,Chair,3.0,9.0,8.0,Furniture
+05/13/2024,Blender,2.0,4.0,2.0,Appliances
+05/13/2024,Jeans,3.0,16.0,10.0,Clothing
+05/13/2024,Smartphone,2.0,4.0,2.0,Electronics
+05/13/2024,Nightstand,1.0,4.0,1.0,Furniture
+05/13/2024,Microwave,1.0,6.0,3.0,Appliances
+05/13/2024,Shirt,4.0,21.0,18.0,Clothing
+05/13/2024,Tablet,1.0,3.0,0.0,Electronics
+05/13/2024,Desk Lamp,1.0,6.0,2.0,Home
+05/13/2024,Vacuum Cleaner,1.0,5.0,2.0,Home
+05/13/2024,Couch,2.0,10.0,5.0,Furniture
+05/14/2024,Sofa,4.0,3.0,10.0,Furniture
+05/14/2024,Television,3.0,2.0,2.0,Electronics
+05/14/2024,Bed,2.0,1.0,5.0,Furniture
+05/14/2024,Toaster,2.0,8.0,4.0,Appliances
+05/14/2024,Coffee Maker,3.0,7.0,2.0,Appliances
+05/14/2024,T-Shirt,4.0,20.0,14.0,Clothing
+05/14/2024,Laptop,2.0,2.0,3.0,Electronics
+05/14/2024,Dining Table,1.0,3.0,1.0,Furniture
+05/14/2024,Refrigerator,1.0,3.0,1.0,Appliances
+05/14/2024,Chair,3.0,9.0,8.0,Furniture
+05/14/2024,Blender,2.0,4.0,2.0,Appliances
+05/14/2024,Jeans,3.0,16.0,10.0,Clothing
+05/14/2024,Smartphone,2.0,4.0,2.0,Electronics
+05/14/2024,Nightstand,1.0,4.0,1.0,Furniture
+05/14/2024,Microwave,1.0,6.0,3.0,Appliances
+05/14/2024,Shirt,4.0,21.0,18.0,Clothing
+05/14/2024,Tablet,1.0,3.0,0.0,Electronics
+05/14/2024,Desk Lamp,1.0,6.0,2.0,Home 
+05/14/2024,Vacuum Cleaner,,,,
+05/14/2024,Couch,,,,
