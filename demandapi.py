@@ -42,7 +42,8 @@ class DemandPredictionResponse(BaseModel):
     daily_demand: List[int]
     demand_spike: str
     expected_demand_date_range: List[str]
-    stock_depletion_date: Optional[str] = None
+    stock_depletion_datetime: Optional[str] = None
+    remaining_stock: int
 
 def load_and_preprocess_data(file_names):
     logging.info(f"Loading data from files: {file_names}")
@@ -77,7 +78,9 @@ def train_model(model, X_train, y_train, X_val, y_val):
 def make_predictions(model, product_data, scaler_demand, sequence_length, future_days=7):
     predictions = []
     current_stock = product_data['Visible Stock'].iloc[-1] + product_data['Inventory'].iloc[-1]
-    stock_depletion_date = None
+    initial_stock = current_stock
+    stock_depletion_datetime = None
+    last_date = pd.to_datetime(product_data['Date'].max())
 
     for i in range(future_days):
         if len(product_data) < sequence_length:
@@ -90,9 +93,20 @@ def make_predictions(model, product_data, scaler_demand, sequence_length, future
         scaled_prediction = int(scaler_demand.inverse_transform([[prediction]])[0][0])
         predictions.append(scaled_prediction)
 
-        current_stock -= scaled_prediction
-        if current_stock <= 0 and stock_depletion_date is None:
-            stock_depletion_date = pd.to_datetime(product_data['Date'].max()) + pd.Timedelta(days=i+1)
+        # Calculate more precise depletion time
+        if current_stock > reorder_threshold[product_data['Product Name'].iloc[0]]:
+            hours_to_deplete = ((current_stock - reorder_threshold[product_data['Product Name'].iloc[0]]) / scaled_prediction) * 24
+            if hours_to_deplete < 24:
+                depletion_time = last_date + pd.Timedelta(hours=hours_to_deplete)
+                if stock_depletion_datetime is None:
+                    stock_depletion_datetime = depletion_time
+                current_stock = reorder_threshold[product_data['Product Name'].iloc[0]]
+            else:
+                current_stock -= scaled_prediction
+        elif stock_depletion_datetime is None:
+            stock_depletion_datetime = last_date
+
+        last_date += pd.Timedelta(days=1)
 
         new_row = pd.DataFrame({
             'Scaled Demand': [prediction],
@@ -103,10 +117,11 @@ def make_predictions(model, product_data, scaler_demand, sequence_length, future
         
         visible_stock_change = round(scaled_prediction)
         inventory_stock_change = round(scaled_prediction)
-        product_data.at[len(product_data) - 1, 'Visible Stock'] = product_data['Visible Stock'].iloc[-2] - visible_stock_change
-        product_data.at[len(product_data) - 1, 'Inventory'] = product_data['Inventory'].iloc[-2] - inventory_stock_change
-        
-    return predictions, stock_depletion_date
+        product_data.at[len(product_data) - 1, 'Visible Stock'] = max(0, product_data['Visible Stock'].iloc[-2] - visible_stock_change)
+        product_data.at[len(product_data) - 1, 'Inventory'] = max(0, product_data['Inventory'].iloc[-2] - inventory_stock_change)
+    
+    remaining_stock = max(0, initial_stock - sum(predictions))
+    return predictions, stock_depletion_datetime, remaining_stock
 
 def move_to_visible(product_data, product_name):
     last_visible_stock = product_data['Visible Stock'].iloc[-1]
@@ -134,20 +149,20 @@ def demand_forecasting_main(file_names, product_name_input):
 
     if product_name_input not in combine_df['Product Name'].unique():
         logging.error(f"Product '{product_name_input}' not found in the dataset.")
-        return None, None
+        return None, None, 0
     
     product_data = combine_df[combine_df['Product Name'] == product_name_input].reset_index(drop=True)
     product_data = preprocessing_data(product_data)[0]
 
-    predictions, stock_depletion_date = make_predictions(model, product_data, scaler_demand, sequence_length)
+    predictions, stock_depletion_datetime, remaining_stock = make_predictions(model, product_data, scaler_demand, sequence_length)
     move_to_visible(product_data, product_name_input)
-    return predictions, stock_depletion_date
+    return predictions, stock_depletion_datetime, remaining_stock
 
 # FastAPI Routes
 @app.get("/api/demand/store1/{product_code}", response_model=DemandPredictionResponse)
 def get_demand_prediction_store1(product_code: str):
     file_names = ["shop_1_combined.csv"]  # Update with actual file paths for store 1
-    predictions, stock_depletion_date = demand_forecasting_main(file_names, product_code)
+    predictions, stock_depletion_datetime, remaining_stock = demand_forecasting_main(file_names, product_code)
     if predictions:
         demand_spike = "High" if max(predictions) > 20 else "Medium" if max(predictions) > 10 else "Low"
         response = {
@@ -157,7 +172,8 @@ def get_demand_prediction_store1(product_code: str):
             "expected_demand_date_range": [
                 str(pd.to_datetime(pd.read_csv(file_names[0], encoding='latin1', parse_dates=['Date'], dayfirst=True)['Date'].max()) + pd.Timedelta(days=i)) for i in range(len(predictions))
             ],
-            "stock_depletion_date": str(stock_depletion_date) if stock_depletion_date else None
+            "stock_depletion_datetime": str(stock_depletion_datetime) if stock_depletion_datetime else None,
+            "remaining_stock": remaining_stock
         }
         return response
     raise HTTPException(status_code=404, detail="Product not found")
@@ -165,7 +181,7 @@ def get_demand_prediction_store1(product_code: str):
 @app.get("/api/demand/store2/{product_code}", response_model=DemandPredictionResponse)
 def get_demand_prediction_store2(product_code: str):
     file_names = ["shop_2.csv"]  # Update with actual file paths for store 2
-    predictions, stock_depletion_date = demand_forecasting_main(file_names, product_code)
+    predictions, stock_depletion_datetime, remaining_stock = demand_forecasting_main(file_names, product_code)
     if predictions:
         demand_spike = "High" if max(predictions) > 20 else "Medium" if max(predictions) > 10 else "Low"
         response = {
@@ -175,7 +191,8 @@ def get_demand_prediction_store2(product_code: str):
             "expected_demand_date_range": [
                 str(pd.to_datetime(pd.read_csv(file_names[0], encoding='latin1', parse_dates=['Date'], dayfirst=True)['Date'].max()) + pd.Timedelta(days=i)) for i in range(len(predictions))
             ],
-            "stock_depletion_date": str(stock_depletion_date) if stock_depletion_date else None
+            "stock_depletion_datetime": str(stock_depletion_datetime) if stock_depletion_datetime else None,
+            "remaining_stock": remaining_stock
         }
         return response
     raise HTTPException(status_code=404, detail="Product not found")
@@ -183,7 +200,7 @@ def get_demand_prediction_store2(product_code: str):
 @app.get("/api/demand/store3/{product_code}", response_model=DemandPredictionResponse)
 def get_demand_prediction_store3(product_code: str):
     file_names = ["shop_3.csv"]  # Update with actual file paths for store 3
-    predictions, stock_depletion_date = demand_forecasting_main(file_names, product_code)
+    predictions, stock_depletion_datetime, remaining_stock = demand_forecasting_main(file_names, product_code)
     if predictions:
         demand_spike = "High" if max(predictions) > 20 else "Medium" if max(predictions) > 10 else "Low"
         response = {
@@ -193,7 +210,8 @@ def get_demand_prediction_store3(product_code: str):
             "expected_demand_date_range": [
                 str(pd.to_datetime(pd.read_csv(file_names[0], encoding='latin1', parse_dates=['Date'], dayfirst=True)['Date'].max()) + pd.Timedelta(days=i)) for i in range(len(predictions))
             ],
-            "stock_depletion_date": str(stock_depletion_date) if stock_depletion_date else None
+            "stock_depletion_datetime": str(stock_depletion_datetime) if stock_depletion_datetime else None,
+            "remaining_stock": remaining_stock
         }
         return response
     raise HTTPException(status_code=404, detail="Product not found")
