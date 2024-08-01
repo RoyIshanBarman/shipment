@@ -44,6 +44,8 @@ class DemandPredictionResponse(BaseModel):
     expected_demand_date_range: List[str]
     stock_depletion_datetime: Optional[str] = None
     remaining_stock: int
+    order_quantity: Optional[int] = None
+    message: Optional[str] = None
 
 def load_and_preprocess_data(file_names):
     logging.info(f"Loading data from files: {file_names}")
@@ -156,13 +158,19 @@ def demand_forecasting_main(file_names, product_name_input):
 
     predictions, stock_depletion_datetime, remaining_stock = make_predictions(model, product_data, scaler_demand, sequence_length)
     move_to_visible(product_data, product_name_input)
-    return predictions, stock_depletion_datetime, remaining_stock
+    
+    if remaining_stock < reorder_threshold[product_name_input]:
+        order_quantity = reorder_threshold[product_name_input] - remaining_stock
+    else:
+        order_quantity = 0
+
+    return predictions, stock_depletion_datetime, remaining_stock, order_quantity
 
 # FastAPI Routes
 @app.get("/api/demand/store1/{product_code}", response_model=DemandPredictionResponse)
 def get_demand_prediction_store1(product_code: str):
     file_names = ["shop_1_combined.csv"]  # Update with actual file paths for store 1
-    predictions, stock_depletion_datetime, remaining_stock = demand_forecasting_main(file_names, product_code)
+    predictions, stock_depletion_datetime, remaining_stock, order_quantity = demand_forecasting_main(file_names, product_code)
     if predictions:
         demand_spike = "High" if max(predictions) > 20 else "Medium" if max(predictions) > 10 else "Low"
         response = {
@@ -173,15 +181,26 @@ def get_demand_prediction_store1(product_code: str):
                 str(pd.to_datetime(pd.read_csv(file_names[0], encoding='latin1', parse_dates=['Date'], dayfirst=True)['Date'].max()) + pd.Timedelta(days=i)) for i in range(len(predictions))
             ],
             "stock_depletion_datetime": str(stock_depletion_datetime) if stock_depletion_datetime else None,
-            "remaining_stock": remaining_stock
+            "remaining_stock": remaining_stock,
+            "order_quantity": order_quantity,
+            "message": "No reorder required" if order_quantity == 0 else None
         }
         return response
-    raise HTTPException(status_code=404, detail="Product not found")
+    return {
+        "product_code": product_code,
+        "daily_demand": [],
+        "demand_spike": "No Data",
+        "expected_demand_date_range": [],
+        "stock_depletion_datetime": None,
+        "remaining_stock": 0,
+        "order_quantity": 0,
+        "message": "Product not found"
+    }
 
 @app.get("/api/demand/store2/{product_code}", response_model=DemandPredictionResponse)
 def get_demand_prediction_store2(product_code: str):
     file_names = ["shop_2.csv"]  # Update with actual file paths for store 2
-    predictions, stock_depletion_datetime, remaining_stock = demand_forecasting_main(file_names, product_code)
+    predictions, stock_depletion_datetime, remaining_stock, order_quantity = demand_forecasting_main(file_names, product_code)
     if predictions:
         demand_spike = "High" if max(predictions) > 20 else "Medium" if max(predictions) > 10 else "Low"
         response = {
@@ -192,15 +211,26 @@ def get_demand_prediction_store2(product_code: str):
                 str(pd.to_datetime(pd.read_csv(file_names[0], encoding='latin1', parse_dates=['Date'], dayfirst=True)['Date'].max()) + pd.Timedelta(days=i)) for i in range(len(predictions))
             ],
             "stock_depletion_datetime": str(stock_depletion_datetime) if stock_depletion_datetime else None,
-            "remaining_stock": remaining_stock
+            "remaining_stock": remaining_stock,
+            "order_quantity": order_quantity,
+            "message": "No reorder required" if order_quantity == 0 else None
         }
         return response
-    raise HTTPException(status_code=404, detail="Product not found")
+    return {
+        "product_code": product_code,
+        "daily_demand": [],
+        "demand_spike": "No Data",
+        "expected_demand_date_range": [],
+        "stock_depletion_datetime": None,
+        "remaining_stock": 0,
+        "order_quantity": 0,
+        "message": "Product not found"
+    }
 
 @app.get("/api/demand/store3/{product_code}", response_model=DemandPredictionResponse)
 def get_demand_prediction_store3(product_code: str):
     file_names = ["shop_3.csv"]  # Update with actual file paths for store 3
-    predictions, stock_depletion_datetime, remaining_stock = demand_forecasting_main(file_names, product_code)
+    predictions, stock_depletion_datetime, remaining_stock, order_quantity = demand_forecasting_main(file_names, product_code)
     if predictions:
         demand_spike = "High" if max(predictions) > 20 else "Medium" if max(predictions) > 10 else "Low"
         response = {
@@ -211,7 +241,18 @@ def get_demand_prediction_store3(product_code: str):
                 str(pd.to_datetime(pd.read_csv(file_names[0], encoding='latin1', parse_dates=['Date'], dayfirst=True)['Date'].max()) + pd.Timedelta(days=i)) for i in range(len(predictions))
             ],
             "stock_depletion_datetime": str(stock_depletion_datetime) if stock_depletion_datetime else None,
-            "remaining_stock": remaining_stock
+            "remaining_stock": remaining_stock,
+            "order_quantity": order_quantity,
+            "message": "No reorder required" if order_quantity == 0 else None
         }
         return response
-    raise HTTPException(status_code=404, detail="Product not found")
+    return {
+        "product_code": product_code,
+        "daily_demand": [],
+        "demand_spike": "No Data",
+        "expected_demand_date_range": [],
+        "stock_depletion_datetime": None,
+        "remaining_stock": 0,
+        "order_quantity": 0,
+        "message": "Product not found"
+    }
