@@ -144,6 +144,16 @@ def save_demand_data(demand_data, filename="demand_data.csv"):
     demand_data.to_csv(filename, index=False)
     print(f"Demand data saved to {filename}")
 
+def parse_order_quantity(order_quantity):
+    try:
+        if isinstance(order_quantity, str) and order_quantity.startswith('['):
+            quantity_list = eval(order_quantity)
+            return sum(quantity_list) if isinstance(quantity_list, list) else quantity_list
+        return int(order_quantity)
+    except Exception as e:
+        print(f"Error parsing order quantity: {e}")
+        return 0
+
 def cargo_tracking_main():
     product_name_input = input("Enter the product name: ")
     productorder.take_orders(product_name_input)
@@ -163,7 +173,11 @@ def cargo_tracking_main():
         print(f"{rank}. {store}")
 
     product_orders = orders_df[orders_df['Product Name'] == product_name_input]
+    
+    # Parse order quantities
+    product_orders['Order Quantity'] = product_orders['Order Quantity'].apply(parse_order_quantity)
     product_orders = product_orders[pd.notna(product_orders['Order Date']) & (product_orders['Order Quantity'] > 0)]
+    
     print(f"Debug: Valid orders for {product_name_input}:")
     print(product_orders)
 

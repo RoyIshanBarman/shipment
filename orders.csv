@@ -1,13 +1,17 @@
 Product Name,Shop,Order Date,Order Quantity
 T-Shirt,shop2,2024-05-15 00:00:00,0.0
 T-Shirt,shop3,2024-05-15 00:00:00,3.0
-Refrigerator,shop1,2024-05-15 00:00:00,11.0
-Blender,shop1,2024-05-15,10.0
-Blender,shop2,2024-05-15,8.0
-Blender,shop3,2024-05-15,10.0
 Television,shop1,2024-05-15,9.0
 Television,shop3,2024-05-15,11.0
 Bed,shop1,2024-05-15,13.0
-Sofa,shop1,2024-05-15,1.0
-Sofa,shop2,2024-05-15,5.0
-Sofa,shop3,2024-05-15,17.0
+Blender,shop1,2024-05-15,"[4, 3, 2, 2, 2, 1, 1]"
+Blender,shop2,2024-05-15,3
+Blender,shop3,2024-05-15,6
+Jeans,shop2,2024-05-15,0
+Jeans,shop3,2024-05-15,5
+Refrigerator,shop1,2024-05-15,"[4, 3, 2, 2, 1, 1, 0]"
+Refrigerator,shop2,2024-05-15,8
+Refrigerator,shop3,2024-05-15,12
+Sofa,shop1,2024-05-15,"[5, 4, 3, 2, 1, 0, -1]"
+Sofa,shop2,2024-05-15,6
+Sofa,shop3,2024-05-15,13
