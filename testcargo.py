@@ -43,35 +43,46 @@ def simulate_cargo_shipping(product_name, order_date, is_quick_order=False):
     tracking_df = pd.DataFrame(data)
     return tracking_df
 
-def process_quick_order(product_name, shop, order_date, order_quantity):
-    print(f"Processing quick order for {product_name} in {shop}")
-    quick_order_quantity = int(input(f"Enter quick order quantity for {shop} (max {order_quantity}): "))
+def process_quick_order(product_name, shop, order_date, order_quantity, excess_inventory):
+    print(f"Processing order for {product_name} in {shop}")
     
-    if quick_order_quantity > 0 and quick_order_quantity <= order_quantity:
-        normal_order_quantity = order_quantity - quick_order_quantity
-        
-        # Process quick order
-        print(f"Quick order for {product_name} in {shop} on {order_date} for {quick_order_quantity} units")
-        quick_tracking_df = simulate_cargo_shipping(product_name, order_date, is_quick_order=True)
-        print("Quick Order Tracking:")
-        print(quick_tracking_df)
-        
-        # Process normal order if there's remaining quantity
-        if normal_order_quantity > 0:
-            print(f"Normal order for {product_name} in {shop} on {order_date} for {normal_order_quantity} units")
-            normal_tracking_df = simulate_cargo_shipping(product_name, order_date, is_quick_order=False)
-            print("Normal Order Tracking:")
-            print(normal_tracking_df)
-            
-            # Combine quick and normal order tracking data
-            tracking_df = pd.concat([quick_tracking_df, normal_tracking_df], ignore_index=True)
-        else:
-            tracking_df = quick_tracking_df
+    max_quick_order = int(order_quantity * 0.3)
+    
+    print(f"You can order up to {max_quick_order} units as a quick order (30% of total).")
+    quick_order_quantity = int(input(f"Enter quick order quantity for {shop} (max {max_quick_order}): "))
+    
+    if quick_order_quantity > max_quick_order:
+        print(f"Quick order quantity exceeds 30% limit. Adjusting to {max_quick_order} units.")
+        quick_order_quantity = max_quick_order
+    
+    normal_order_quantity = order_quantity - quick_order_quantity
+    
+    # Check for excess inventory in other shops
+    for excess_shop, excess_quantity in excess_inventory.items():
+        if excess_quantity >= quick_order_quantity:
+            print(f"Transferring {quick_order_quantity} units from {excess_shop} to {shop} as quick order.")
+            excess_inventory[excess_shop] -= quick_order_quantity
+            quick_tracking_df = pd.DataFrame({
+                'Timestamp': [order_date],
+                'Status': ['Transferred'],
+                'Order Type': ['Quick Order'],
+                'From Shop': [excess_shop],
+                'To Shop': [shop],
+                'Quantity': [quick_order_quantity]
+            })
+            break
     else:
-        print("Invalid quick order quantity. Processing as normal order.")
-        tracking_df = simulate_cargo_shipping(product_name, order_date, is_quick_order=False)
-        print("Normal Order Tracking:")
-        print(tracking_df)
+        print(f"No sufficient excess inventory found. Processing as new quick order.")
+        quick_tracking_df = simulate_cargo_shipping(product_name, order_date, is_quick_order=True)
+    
+    print("Quick Order Tracking:")
+    print(quick_tracking_df)
+    
+    normal_tracking_df = simulate_cargo_shipping(product_name, order_date, is_quick_order=False)
+    print("Normal Order Tracking:")
+    print(normal_tracking_df)
+    
+    tracking_df = pd.concat([quick_tracking_df, normal_tracking_df], ignore_index=True)
     
     return tracking_df
 
@@ -149,10 +160,25 @@ def parse_order_quantity(order_quantity):
         if isinstance(order_quantity, str) and order_quantity.startswith('['):
             quantity_list = eval(order_quantity)
             return sum(quantity_list) if isinstance(quantity_list, list) else quantity_list
-        return int(order_quantity)
+        return float(order_quantity)  # Changed from int() to float()
     except Exception as e:
         print(f"Error parsing order quantity: {e}")
         return 0
+
+def calculate_excess_inventory(sales_data_files):
+    excess_inventory = {}
+    for sales_file in sales_data_files:
+        try:
+            sales_data = pd.read_csv(sales_file)
+            shop_id = sales_file.split('_')[1].replace('.csv', '')
+            shop_id = rename_shop(shop_id)
+            total_stock = sales_data['Stock'].sum()
+            total_sales = sales_data['Sales'].sum()
+            excess_quantity = max(0, total_stock - total_sales)
+            excess_inventory[shop_id] = excess_quantity
+        except Exception as e:
+            print(f"Error processing sales data for {sales_file}: {e}")
+    return excess_inventory
 
 def cargo_tracking_main():
     product_name_input = input("Enter the product name: ")
@@ -173,14 +199,18 @@ def cargo_tracking_main():
         print(f"{rank}. {store}")
 
     product_orders = orders_df[orders_df['Product Name'] == product_name_input]
+    print("Debug: Product orders before filtering:")
+    print(product_orders)
     
     # Parse order quantities
     product_orders['Order Quantity'] = product_orders['Order Quantity'].apply(parse_order_quantity)
-    product_orders = product_orders[pd.notna(product_orders['Order Date']) & (product_orders['Order Quantity'] > 0)]
-    
-    print(f"Debug: Valid orders for {product_name_input}:")
+    print("Debug: Product orders after parsing quantity:")
     print(product_orders)
-
+    
+    product_orders = product_orders[pd.notna(product_orders['Order Date']) & (product_orders['Order Quantity'] > 0)]
+    print("Debug: Product orders after final filtering:")
+    print(product_orders)
+    
     if product_orders.empty:
         print(f"No valid orders placed for {product_name_input}.")
         return
@@ -193,6 +223,10 @@ def cargo_tracking_main():
         'Order Quantity': 'sum'
     }).reset_index()
 
+    # Calculate excess inventory from sales data files
+    sales_data_files = ['shop1_combined.csv', 'shop2.csv', 'shop3.csv']
+    excess_inventory = calculate_excess_inventory(sales_data_files)
+    
     tracking_data = []
 
     for _, order in aggregated_orders.iterrows():
@@ -203,7 +237,7 @@ def cargo_tracking_main():
         
         if pd.notna(order_date):
             if quick_order_enabled:
-                tracking_df = process_quick_order(product_name_input, shop, order_date, order_quantity)
+                tracking_df = process_quick_order(product_name_input, shop, order_date, order_quantity, excess_inventory)
             else:
                 print(f"Normal order for {product_name_input} in {shop} on {order_date} for {order_quantity} units")
                 tracking_df = simulate_cargo_shipping(product_name_input, order_date, is_quick_order=False)

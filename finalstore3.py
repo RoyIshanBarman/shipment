@@ -162,7 +162,7 @@ def calculate_order_quantity(product_data, predictions, reorder_threshold):
     return 0
 
 if __name__ == "__main__":
-    file_names = ["shop_1_combined.csv", "shop_2.csv", "shop_3.csv"]
+    file_names = ["shop_3.csv"]
     product_name_input = input("Enter the product name: ")
     reorder_date, order_quantity = demand_forecasting_main(file_names, product_name_input)
     if reorder_date:

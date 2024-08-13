@@ -1,6 +1,3 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from typing import List, Dict
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
@@ -8,46 +5,34 @@ from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import LSTM, Dense, Dropout
 from keras.callbacks import EarlyStopping
-import logging
 
-app = FastAPI()
-
-logging.basicConfig(level=logging.INFO)
-
-reorder_threshold = {
+ReorderThresholds = {
     "Sofa": 15,
     "Television": 2,
     "Bed": 2,
     "Toaster": 2,
     "Coffee Maker": 2,
-    "T-Shirt": 5,
+    "T-Shirt": 10,
     "Laptop": 2,
     "Dining Table": 1,
     "Refrigerator": 1,
     "Chair": 4,
-    "Microwave": 2,
-    "Washing Machine": 1,
-    "Smartphone": 6,
-    "Headphones": 7,
     "Blender": 3,
-    "Monitor": 4,
+    "Jeans": 10,
+    "Smartphone": 6,
+    "Nightstand": 3,
+    "Microwave": 2,
+    "Shirt": 10,
     "Tablet": 5,
-    "Camera": 2,
+    "Desk Lamp": 5,
     "Vacuum Cleaner": 1,
-    "Bookshelf": 2
+    "Couch": 5
 }
-
-class DemandPredictionResponse(BaseModel):
-    product_code: str
-    predicted_demand_percentage: int
-    demand_spike: str
-    expected_demand_date_range: List[str]
+move_to_visible_threshold = 2
 
 def load_and_preprocess_data(file_names):
-    logging.info(f"Loading data from files: {file_names}")
     combine_df = pd.concat([pd.read_csv(file, encoding='latin1', parse_dates=['Date'], dayfirst=True) for file in file_names], ignore_index=True)
     combine_df.dropna(inplace=True)
-    logging.info("Data loaded and preprocessed successfully.")
     return combine_df
 
 def preprocessing_data(df):
@@ -77,6 +62,7 @@ def make_predictions(model, product_data, scaler_demand, sequence_length, future
     predictions = []
     for i in range(future_days):
         if len(product_data) < sequence_length:
+            print("Insufficient data for making predictions.")
             break
         last_sequence = product_data[['Scaled Demand', 'Scaled Visible Stock', 'Scaled Inventory Stock']].iloc[-sequence_length:].values
         if last_sequence.shape == (sequence_length, 3):
@@ -85,7 +71,7 @@ def make_predictions(model, product_data, scaler_demand, sequence_length, future
             continue 
         scaled_prediction = scaler_demand.inverse_transform([[prediction]])[0][0]
         predictions.append(round(scaled_prediction))
-
+        
         new_row = pd.DataFrame({
             'Scaled Demand': [prediction],
             'Scaled Visible Stock': [product_data['Scaled Visible Stock'].iloc[-1] - prediction],
@@ -93,6 +79,7 @@ def make_predictions(model, product_data, scaler_demand, sequence_length, future
         }, index=[len(product_data)])
         product_data = pd.concat([product_data, new_row])
         
+        # Update stock levels
         visible_stock_change = round(scaled_prediction)
         inventory_stock_change = round(scaled_prediction)
         product_data.at[len(product_data) - 1, 'Visible Stock'] = product_data['Visible Stock'].iloc[-2] - visible_stock_change
@@ -101,20 +88,22 @@ def make_predictions(model, product_data, scaler_demand, sequence_length, future
     return predictions
 
 def check_reorder_and_print(product_data, product_name, predictions):
-    reorder_thresh = reorder_threshold[product_name]
+    reorder_thresh = ReorderThresholds[product_name]
     for i, prediction in enumerate(predictions, start=1):
-        future_date = pd.to_datetime(product_data['Date'].max()) + pd.Timedelta(days=i)
+        future_date = pd.to_datetime(product_data['Date'].max(), dayfirst=True) + pd.Timedelta(days=i)
         future_visible_stock = product_data['Visible Stock'].iloc[-1] - prediction
         future_inventory_stock = product_data['Inventory'].iloc[-1] - prediction
+        print(f"Debug: {future_date.date()} - Future Visible Stock: {future_visible_stock}, Future Inventory Stock: {future_inventory_stock}")
         if future_visible_stock < reorder_thresh and future_inventory_stock < reorder_thresh:
+            print(f"Stock level is low (Visible: {int(future_visible_stock)} units, Inventory: {int(future_inventory_stock)} units) for {product_name} on {future_date.date()}")
             return True, future_date.date()
     return False, None
 
 def move_to_visible(product_data, product_name):
     last_visible_stock = product_data['Visible Stock'].iloc[-1]
     last_inventory_stock = product_data['Inventory'].iloc[-1]
-    if last_visible_stock < reorder_threshold[product_name] and last_inventory_stock > 0:
-        move_units = min(reorder_threshold[product_name] - last_visible_stock, last_inventory_stock)
+    if last_visible_stock < move_to_visible_threshold and last_inventory_stock > 0:
+        move_units = min(move_to_visible_threshold - last_visible_stock, last_inventory_stock)
         product_data.at[len(product_data) - 1, 'Visible Stock'] += move_units
         product_data.at[len(product_data) - 1, 'Inventory'] -= move_units
 
@@ -131,23 +120,32 @@ def demand_forecasting_main(file_names, product_name_input):
 
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)
 
+    # LSTM model
     model = create_lstm_model(sequence_length)
     train_model(model, X_train, y_train, X_val, y_val)
 
-    if product_name_input not in combine_df['Product Name'].unique():
-        logging.error(f"Product '{product_name_input}' not found in the dataset.")
-        return None, 0, []
-    
-    product_data = combine_df[combine_df['Product Name'] == product_name_input].reset_index(drop=True)
-    product_data = preprocessing_data(product_data)[0]
+    for product_name in combine_df['Product Name'].unique():
+        if product_name == product_name_input:
+            product_data = combine_df[combine_df['Product Name'] == product_name].reset_index(drop=True)
+            product_data = preprocessing_data(product_data)[0]
 
-    predictions = make_predictions(model, product_data, scaler_demand, sequence_length)
-    if predictions:
-        reorder_needed, reorder_date = check_reorder_and_print(product_data, product_name_input, predictions)
-        move_to_visible(product_data, product_name_input)
-        return reorder_date, predictions
-    move_to_visible(product_data, product_name_input)
-    return None, []
+            print(f"Predictive Demand for {product_name}:")
+            predictions = make_predictions(model, product_data, scaler_demand, sequence_length)
+            for i, prediction in enumerate(predictions, start=1):
+                print(f"  {pd.to_datetime(combine_df['Date'].max()) + pd.Timedelta(days=i)} - {prediction}")
+
+            if predictions:
+                reorder_needed, reorder_date = check_reorder_and_print(product_data, product_name, predictions)
+                if reorder_needed:
+                    order_quantity = calculate_order_quantity(product_data, predictions, ReorderThresholds[product_name])
+                    print(f"Order quantity needed: {order_quantity}")
+                    return reorder_date, order_quantity
+            else:
+                print("Not enough data to predict future demand.")
+            
+            move_to_visible(product_data, product_name)
+            break
+    return None, 0
 
 def calculate_order_quantity(product_data, predictions, reorder_threshold):
     future_visible_stock = product_data['Visible Stock'].iloc[-1]
@@ -160,60 +158,11 @@ def calculate_order_quantity(product_data, predictions, reorder_threshold):
         return total_predicted_demand - total_future_stock
     return 0
 
-# FastAPI Routes
-@app.get("/api/demand/store1/{product_code}", response_model=DemandPredictionResponse)
-def get_demand_prediction_store1(product_code: str):
-    file_names = ["shop_1_combined.csv"]  # Update with actual file paths for store 1
-    reorder_date, predictions = demand_forecasting_main(file_names, product_code)
-    if predictions:
-        demand_spike = "High" if max(predictions) > 20 else "Medium" if max(predictions) > 10 else "Low"
-        prediction_dates = [
-            str(pd.to_datetime(pd.read_csv(file_names[0], encoding='latin1', parse_dates=['Date'], dayfirst=True)['Date'].max()) + pd.Timedelta(days=i)) for i in range(len(predictions))
-        ]
-        predicted_demand_percentage = sum(predictions) / len(predictions)
-        response = {
-            "product_code": product_code,
-            "predicted_demand_percentage": round(predicted_demand_percentage),
-            "demand_spike": demand_spike,
-            "expected_demand_date_range": prediction_dates
-        }
-        return response
-    raise HTTPException(status_code=404, detail="Product not found")
-
-@app.get("/api/demand/store2/{product_code}", response_model=DemandPredictionResponse)
-def get_demand_prediction_store2(product_code: str):
-    file_names = ["shop_2_combined.csv"]  # Update with actual file paths for store 2
-    reorder_date, predictions = demand_forecasting_main(file_names, product_code)
-    if predictions:
-        demand_spike = "High" if max(predictions) > 20 else "Medium" if max(predictions) > 10 else "Low"
-        prediction_dates = [
-            str(pd.to_datetime(pd.read_csv(file_names[0], encoding='latin1', parse_dates=['Date'], dayfirst=True)['Date'].max()) + pd.Timedelta(days=i)) for i in range(len(predictions))
-        ]
-        predicted_demand_percentage = sum(predictions) / len(predictions)
-        response = {
-            "product_code": product_code,
-            "predicted_demand_percentage": round(predicted_demand_percentage),
-            "demand_spike": demand_spike,
-            "expected_demand_date_range": prediction_dates
-        }
-        return response
-    raise HTTPException(status_code=404, detail="Product not found")
-
-@app.get("/api/demand/store3/{product_code}", response_model=DemandPredictionResponse)
-def get_demand_prediction_store3(product_code: str):
-    file_names = ["shop_3_combined.csv"]  # Update with actual file paths for store 3
-    reorder_date, predictions = demand_forecasting_main(file_names, product_code)
-    if predictions:
-        demand_spike = "High" if max(predictions) > 20 else "Medium" if max(predictions) > 10 else "Low"
-        prediction_dates = [
-            str(pd.to_datetime(pd.read_csv(file_names[0], encoding='latin1', parse_dates=['Date'], dayfirst=True)['Date'].max()) + pd.Timedelta(days=i)) for i in range(len(predictions))
-        ]
-        predicted_demand_percentage = sum(predictions) / len(predictions)
-        response = {
-            "product_code": product_code,
-            "predicted_demand_percentage": round(predicted_demand_percentage),
-            "demand_spike": demand_spike,
-            "expected_demand_date_range": prediction_dates
-        }
-        return response
-    raise HTTPException(status_code=404, detail="Product not found")
+if __name__ == "__main__":
+    file_names = ["shop_1_combined.csv"]
+    product_name_input = input("Enter the product name: ")
+    reorder_date, order_quantity = demand_forecasting_main(file_names, product_name_input)
+    if reorder_date:
+        print(f"Reorder needed on {reorder_date} for {order_quantity} units.")
+    else:
+        print("No reorder needed.")
