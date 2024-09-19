@@ -1,0 +1,101 @@
+Vendor_Name,Product,Max_Capacity,Delivery_Time,Cost,Market_Price,Reliability_Rating
+FastShip Inc,Sofa,50,36,250.00,399.99,0.95
+QuickDeliver,Sofa,30,24,275.00,399.99,0.92
+BulkSupply Co,Sofa,100,48,230.00,399.99,0.88
+LuxuryGoods,Sofa,20,18,300.00,399.99,0.97
+EcoFriendly Supplies,Sofa,40,42,260.00,399.99,0.91
+MegaVendor,Television,200,24,180.00,299.99,0.94
+ElectroShip,Television,150,18,195.00,299.99,0.93
+TechDelivery,Television,250,30,175.00,299.99,0.91
+ScreenMasters,Television,100,12,210.00,299.99,0.96
+GlobalGadgets,Television,300,36,170.00,299.99,0.89
+DreamSleep,Bed,30,48,400.00,699.99,0.96
+ComfyExpress,Bed,50,36,380.00,699.99,0.93
+BedBulk,Bed,80,60,350.00,699.99,0.90
+SleepWell Inc,Bed,40,24,420.00,699.99,0.97
+NightRestSuppliers,Bed,60,42,375.00,699.99,0.92
+ToastMaster,Toaster,500,12,15.00,29.99,0.95
+KitchenExperts,Toaster,400,8,17.50,29.99,0.97
+ApplianceKing,Toaster,600,18,14.00,29.99,0.93
+HomeGoods,Toaster,300,6,18.50,29.99,0.98
+BudgetAppliances,Toaster,700,24,13.00,29.99,0.91
+CoffeeExpress,Coffee Maker,300,18,25.00,49.99,0.96
+BrewMasters,Coffee Maker,250,12,27.50,49.99,0.98
+MorningBoost,Coffee Maker,400,24,23.00,49.99,0.94
+CaffeineKing,Coffee Maker,200,8,29.00,49.99,0.97
+HomeBarista,Coffee Maker,350,20,24.50,49.99,0.95
+FashionForward,T-Shirt,2000,24,5.00,14.99,0.93
+BulkClothing,T-Shirt,5000,48,4.00,14.99,0.89
+QuickStitch,T-Shirt,1500,12,6.00,14.99,0.96
+EcoWear,T-Shirt,1000,36,5.50,14.99,0.94
+TrendSetters,T-Shirt,3000,30,4.50,14.99,0.92
+TechGiants,Laptop,100,36,450.00,799.99,0.97
+ComputerWorld,Laptop,150,48,425.00,799.99,0.95
+DigitalExpress,Laptop,80,24,475.00,799.99,0.98
+ElectroHub,Laptop,200,60,400.00,799.99,0.93
+GadgetMasters,Laptop,120,30,460.00,799.99,0.96
+DiningKing,Dining Table,30,72,200.00,399.99,0.94
+FurniturePlus,Dining Table,50,96,180.00,399.99,0.92
+WoodWorks,Dining Table,20,48,220.00,399.99,0.97
+HomeStylers,Dining Table,40,84,190.00,399.99,0.93
+ElegantDining,Dining Table,25,60,210.00,399.99,0.95
+CoolFridge,Refrigerator,50,72,400.00,799.99,0.96
+ApplianceGiants,Refrigerator,80,96,375.00,799.99,0.94
+ChillMasters,Refrigerator,30,48,425.00,799.99,0.98
+FrostKing,Refrigerator,60,84,390.00,799.99,0.95
+EcoFridge,Refrigerator,40,60,410.00,799.99,0.97
+SitComfort,Chair,200,24,40.00,79.99,0.95
+ChairMasters,Chair,300,36,35.00,79.99,0.93
+SeatingKing,Chair,250,30,37.50,79.99,0.94
+ErgonomicPlus,Chair,150,18,45.00,79.99,0.97
+BulkSeats,Chair,400,48,32.50,79.99,0.91
+MixItUp,Blender,400,12,20.00,39.99,0.96
+SmoothieKing,Blender,500,18,18.50,39.99,0.94
+KitchenWhiz,Blender,300,8,22.00,39.99,0.98
+BlendMaster,Blender,600,24,17.00,39.99,0.93
+PulseBlend,Blender,350,14,21.00,39.99,0.95
+DenimKing,Jeans,1000,36,20.00,49.99,0.94
+FashionDenim,Jeans,1500,48,18.00,49.99,0.92
+QuickFit,Jeans,800,24,22.00,49.99,0.96
+EcoJeans,Jeans,600,30,21.00,49.99,0.95
+TrendyLegs,Jeans,1200,42,19.00,49.99,0.93
+MobileKing,Smartphone,300,24,200.00,399.99,0.97
+TechConnect,Smartphone,400,36,190.00,399.99,0.95
+SmartLife,Smartphone,250,18,210.00,399.99,0.98
+GlobalComm,Smartphone,500,48,180.00,399.99,0.94
+InnovatePhone,Smartphone,350,30,195.00,399.99,0.96
+SleepCorner,Nightstand,100,48,40.00,79.99,0.95
+BedsideExpress,Nightstand,150,60,35.00,79.99,0.93
+NightComfort,Nightstand,80,36,45.00,79.99,0.97
+DreamDecor,Nightstand,120,54,37.50,79.99,0.94
+CozyNook,Nightstand,90,42,42.00,79.99,0.96
+WaveHeat,Microwave,200,24,50.00,99.99,0.96
+QuickCook,Microwave,250,36,45.00,99.99,0.94
+KitchenTech,Microwave,150,18,55.00,99.99,0.98
+MealExpress,Microwave,300,48,42.50,99.99,0.93
+EasyHeat,Microwave,180,30,52.00,99.99,0.95
+FashionExpress,Shirt,2500,36,8.00,24.99,0.94
+BulkTops,Shirt,4000,48,7.00,24.99,0.92
+QuickThreads,Shirt,2000,24,9.00,24.99,0.96
+EcoApparel,Shirt,1500,30,8.50,24.99,0.95
+TrendyTops,Shirt,3000,42,7.50,24.99,0.93
+TabletTech,Tablet,200,24,100.00,199.99,0.97
+ScreenMobile,Tablet,250,36,95.00,199.99,0.95
+TouchPad,Tablet,150,18,105.00,199.99,0.98
+MobileCompute,Tablet,300,48,90.00,199.99,0.94
+SmartScreen,Tablet,180,30,97.50,199.99,0.96
+BrightIdeas,Desk Lamp,400,24,15.00,29.99,0.95
+LightMaster,Desk Lamp,500,36,13.50,29.99,0.93
+StudyBright,Desk Lamp,300,18,16.50,29.99,0.97
+HomeIlluminate,Desk Lamp,600,48,12.00,29.99,0.92
+DeskGlow,Desk Lamp,350,30,14.00,29.99,0.94
+CleanSweep,Vacuum Cleaner,100,36,75.00,149.99,0.96
+SuctionKing,Vacuum Cleaner,150,48,70.00,149.99,0.94
+DustBuster,Vacuum Cleaner,80,24,80.00,149.99,0.98
+HomeClean,Vacuum Cleaner,200,60,65.00,149.99,0.93
+QuietVac,Vacuum Cleaner,120,42,72.50,149.99,0.95
+ComfyLounge,Couch,40,72,300.00,599.99,0.95
+RelaxMaster,Couch,60,96,280.00,599.99,0.93
+LuxurySeating,Couch,30,48,320.00,599.99,0.97
+HomeComfort,Couch,50,84,290.00,599.99,0.94
+CouchKing,Couch,35,60,310.00,599.99,0.96

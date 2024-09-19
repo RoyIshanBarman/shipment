@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import LSTM, Dense, Dropout
 from keras.callbacks import EarlyStopping
-
+#optimal Thresholds
 ReorderThresholds = {
     "Sofa": 15,
     "Television": 2,
@@ -86,7 +86,7 @@ def make_predictions(model, product_data, scaler_demand, sequence_length, future
         product_data.at[len(product_data) - 1, 'Inventory'] = product_data['Inventory'].iloc[-2] - inventory_stock_change
         
     return predictions
-
+#to cHeck the reorder status
 def check_reorder_and_print(product_data, product_name, predictions):
     reorder_thresh = ReorderThresholds[product_name]
     for i, prediction in enumerate(predictions, start=1):
@@ -98,7 +98,7 @@ def check_reorder_and_print(product_data, product_name, predictions):
             print(f"Stock level is low (Visible: {int(future_visible_stock)} units, Inventory: {int(future_inventory_stock)} units) for {product_name} on {future_date.date()}")
             return True, future_date.date()
     return False, None
-
+#transfering stock details from inventory to visible as per sales
 def move_to_visible(product_data, product_name):
     last_visible_stock = product_data['Visible Stock'].iloc[-1]
     last_inventory_stock = product_data['Inventory'].iloc[-1]
@@ -146,7 +146,7 @@ def demand_forecasting_main(file_names, product_name_input):
             move_to_visible(product_data, product_name)
             break
     return None, 0
-
+#to cHeck t order quantity
 def calculate_order_quantity(product_data, predictions, reorder_threshold):
     future_visible_stock = product_data['Visible Stock'].iloc[-1]
     future_inventory_stock = product_data['Inventory'].iloc[-1]
